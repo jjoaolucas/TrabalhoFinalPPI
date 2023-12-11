@@ -16,7 +16,7 @@ function processarCadastroUsuario(requisicao, resposta){
     const dados = requisicao.body;
     let conteudoResposta = '';
 
-    if(!(dados.nome && dados.sobrenome && dados.nomeUsuario && dados.cidade && dados.uf && dados.cep && dados.contribuicao))
+    if(!(dados.nome && dados.sobrenome && dados.nomeUsuario && dados.DataNasc && dados.email && dados.senha))
     {
         conteudoResposta=`
         <!DOCTYPE html>
@@ -26,185 +26,219 @@ function processarCadastroUsuario(requisicao, resposta){
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Document</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-            <style>label{ font-weight: 600};</style>
-        </head>
+            <style>
+            body {
+                background-color: #adaeaf;
+                background-image: url(background-batepapo.png);
+                display: flex;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+        
+            .container {
+                background-color: #585d63fa;
+                border-radius: 8px;
+                border: 2px solid black;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+            }
+        
+            label { 
+                font-weight: 800; 
+                color: rgb(0, 0, 0);
+            }
+        
+            .btn-success {
+                padding: 10px;
+                font-size: 16px;
+            }
+            </style>
+        </head> 
         <body>
-            <div class="container col-6" style="padding: 30px;">
+            <div class="container col-md-4" style="padding: 30px;">
                 <form action='/cadastrarUsuario' method="POST"  class="row col-12 needs-validation mx-auto my-auto" novalidate>
-                <fieldset class="border border-secondary rounded-2 p-2 mt-2">
-                    <legend class="mb-3 text-success text-center" style="font-weight: 700;">Cadastro de Voluntarios ONG <span style="color: orange;">AuMigos</span></legend>
-                    <div class="col-md-6 ">
-                      <label for="nome" class="form-label">Nome</label>
-                      <input type="text" class="form-control" id="nome" name="nome" value="${dados.nome}" required>
-                      
+                
+                    <legend class="mb-3 text-center" style="font-weight: 800;">Cadastro de Usuários<br><span style="color: rgba(39, 196, 39, 0.856);">Bate-papo WEB</span> </legend>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                        <label for="nome" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                        ${!dados.nome ? `<p class="text-danger">Por favor, informe o nome!</p>` : ''}
+                        </div>
                     </div>
         `;
-        if (!dados.nome){
-            conteudoResposta+=`<div>
-                                <p class="text-danger">Por favor, informe o nome!</p>
-                             </div>`;
-        }
+        
         conteudoResposta+=`
-            <div class="col-md-6 mt-2">
-            <label for="sobrenome" class="form-label">Sobrenome</label>
-            <input type="text" class="form-control" id="sobrenome" name="sobrenome" value="${dados.sobrenome}" required>
-            
-        </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                        <label for="sobrenome" class="form-label">Sobrenome</label>
+                        <input type="text" class="form-control" id="sobrenome" name="sobrenome" required>
+                        ${!dados.sobrenome ? `<p class="text-danger">Por favor, informe o sobrenome!</p>` : ''}
+                        </div>
+                    </div>
         `;
-        if (!dados.sobrenome){
-            conteudoResposta+=`<div>
-                                <p class="text-danger">Por favor, informe o sobrenome!</p>
-                             </div>`;
-        }
+        
         conteudoResposta+=`
-            <div class="col-md-6 mt-2">
-                <label for="nomeUsuario" class="form-label">Nome de usuário</label>
-                <div class="input-group has-validation">
-                    <span class="input-group-text" id="nomeUsuario">@</span>
-                    <input type="text" class="form-control" id="nomeUsuario" name="nomeUsuario" aria-describedby="inputGroupPrepend" value="${dados.nomeUsuario}" required>
-                </div>
+                <div class="col-md-6">
+                        <div class="mb-3">
+                        <label for="nomeUsuario" class="form-label">Nome de usuário</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text" id="nomeUsuario">@</span>
+                            <input type="text" class="form-control" id="nomeUsuario" name="nomeUsuario" aria-describedby="inputGroupPrepend" required>
+                        </div>
+                        ${!dados.nomeUsuario ? `<p class="text-danger">Por favor, informe o nome do usuário!</p>` : ''}
+                    </div>
                 </div>
         `;
-        if (!dados.nomeUsuario){
-            conteudoResposta+=`<div>
-                                <p class="text-danger">Por favor, informe o nome do usuario!</p>
-                             </div>`;
-        }
-        conteudoResposta +=`
-                <div class="col-md-6 mt-2">
-                <label for="cidade" class="form-label">Cidade</label>
-                <input type="text" class="form-control" id="cidade" name="cidade" value="${dados.cidade}" required>
+
+        conteudoResposta+=`
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="DataNasc" style="margin-top: 8px;">Data de nascimento</label>
+                    <input type="date" name="DataNasc" id="DataNasc" class="form-control" required>
+                    ${!dados.DataNasc ? `<p class="text-danger">Por favor, informe a Data de Nascimento!</p>` : ''}
+                </div>
             </div>
         `;
-        if(!dados.cidade){
-            conteudoResposta+=`<div>
-                                <p class="text-danger">Por favor, informe a cidade!</p>
-                             </div>`;
-        }
-        conteudoResposta +=`
-                <div class="col-md-5 mt-2">
-                <label for="uf" class="form-label">Estado</label>
-                <select class="form-select" id="uf" name="uf" value="${dados.uf}" required>
-                <option selected disabled value="">Escolha um estado...</option>
-                <option value="AC">Acre</option>
-                <option value="AL">Alagoas</option>
-                <option value="AP">Amapá</option>
-                <option value="AM">Amazonas</option>
-                <option value="BA">Bahia</option>
-                <option value="CE">Ceará</option>
-                <option value="DF">Distrito Federal</option>
-                <option value="ES">Espírito Santo</option>
-                <option value="GO">Goiás</option>
-                <option value="MA">Maranhão</option>
-                <option value="MT">Mato Grosso</option>
-                <option value="MS">Mato Grosso do Sul</option>
-                <option value="MG">Minas Gerais</option>
-                <option value="PA">Pará</option>
-                <option value="PB">Paraíba</option>
-                <option value="PR">Paraná</option>
-                <option value="PE">Pernambuco</option>
-                <option value="PI">Piauí</option>
-                <option value="RJ">Rio de Janeiro</option>
-                <option value="RN">Rio Grande do Norte</option>
-                <option value="RS">Rio Grande do Sul</option>
-                <option value="RO">Rondônia</option>
-                <option value="RR">Roraima</option>
-                <option value="SC">Santa Catarina</option>
-                <option value="SP">São Paulo</option>
-                <option value="SE">Sergipe</option>
-                <option value="TO">Tocantins</option>
-                <option value="EX">Estrangeiro</option>
-                </select>
-            
+        
+        conteudoResposta+=`
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-Mail</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="exemplo@gmail.com" required>
+                    ${!dados.email ? `<p class="text-danger">Por favor, informe o email!</p>` : ''}
+                </div>
             </div>
         `;
-        if (!dados.uf){
-            conteudoResposta+=`<div>
-                                <p class="text-danger">Por favor, informe o Estado!</p>
-                            </div>`;
-        }
+
+
         conteudoResposta+=`
-            <div class="col-md-3 mt-2">
-            <label for="cep" class="form-label">CEP</label>
-            <input type="text" class="form-control" id="cep" name="cep" value="${dados.cep}" required>
-        
-        </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="senha" class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="senha" name="senha" required>
+                        ${!dados.senha ? `<p class="text-danger">Por favor, informe uma senha!</p>` : ''}
+                    </div>
+                </div>
         `;
-        if (!dados.cep){
-            conteudoResposta+=`<div>
-                                <p class="text-danger">Por favor, informe o CEP!</p>
-                            </div>`;
-        }
-        conteudoResposta+=`
-            <div class="col-md-5 mt-2">
-            <label for="contribuicao" class="form-label">Contribuição: </label>
-            <select class="form-select" id="contribuicao" name="contribuicao" value="${dados.contribuicao}" required>
-            <option selected disabled value="">Escolha uma contribuição...</option>
-            <option value="Alimentação e Hidratação">Alimentação e Hidratação</option>
-            <option value="Passeios e Exercícios">Passeios e Exercícios</option>
-            <option value="Limpeza e Higiene">Limpeza e Higiene</option>
-            <option value="Cuidados Médicos Básicos">Cuidados Médicos Básicos</option>
-            <option value="Treinamento Básico">Treinamento Básico</option>
-            <option value="Apoio Emocional">Apoio Emocional</option>
-            </select>
         
-        </div>
-        `;
-        if(!dados.contribuicao){
-            conteudoResposta+=`<div>
-                                    <p class="text-danger">Por favor, informe a Contribuição!</p>
-                               </div>`;
-        }
         conteudoResposta +=`
                                 <div class="col-12 mt-4">
                                     <button class="btn btn-success" type="submit">Cadastrar</button>
                                 </div>
-                            </fieldset>
+                            
                         </form>
                     </div>
-                            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
                 </body>
             </html>
         `;
         resposta.end(conteudoResposta)
-
     }
     else {
     const usuario = {
         nome: dados.nome,
         sobrenome: dados.sobrenome,
         nomeUsuario: dados.nomeUsuario,
-        cidade: dados.cidade,
-        uf: dados.uf,
-        cep: dados.cep,
-        contribuicao: dados.contribuicao
+        DataNasc: dados.DataNasc,
+        email: dados.email,
+        senha: dados.senha,
     } 
     listaUsuarios.push(usuario);
 
     conteudoResposta =`
-    <!DOCTYPE html>
+            <!DOCTYPE html>
         <html lang="en">
+
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Document</title>
+            <title>Lista de Voluntários</title>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+            <style>
+                body {
+                    background-color: #adaeaf;
+                    background-image: url(background-batepapo.png);
+                    display: flex;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                }
+
+                .container {
+                    background-color: #585d63fa;
+                    border-radius: 8px;
+                    border: 2px solid black;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    padding: 20px;
+                }
+
+                label {
+                    font-weight: 800;
+                    color: rgb(0, 0, 0);
+                }
+
+                .btn-success,
+                .btn-danger {
+                    padding: 10px;
+                    font-size: 16px;
+                    width: 20%;
+                }
+
+                .btn-danger {
+                    margin-top: 10px;
+                    float: right;
+                }
+
+                .btn-success {
+                    margin-top: 20px;
+                    float: left;
+                }
+
+                th,
+                td {
+                    color: white;
+                }
+
+                th {
+                    background-color: #28a745;
+                }
+
+                tbody tr:nth-child(odd) {
+                    background-color: #e0e0e0;
+                }
+
+                tbody tr:nth-child(even) {
+                    background-color: #f0f0f0;
+                }
+
+                @media (max-width: 767px) {
+                    .btn-success,
+                    .btn-danger {
+                        width: 100%;
+                        float: none;
+                    }
+                }
+
+            </style>
         </head>
-        <body>
-            <h1 class="text-success text-center" style="font-weight: 700; text-decoration: underline">Lista de voluntários cadastrados</h1>
-            <table class="table table-striped table-hover mt-2">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Sobrenome</th>
-                        <th>Nome de Usuário</th>
-                        <th>Cidade/UF</th>
-                        <th>CEP</th>
-                        <th>Contribuição</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody> `;
+
+<body>
+    <div class="container col-md-8" style="padding: 20px;">
+        <h1 class="text-center" style="font-weight: 700;color: black;">Lista de <span style="color: rgba(39, 196, 39, 0.856);">usuários cadastrados</span></h1>
+        <div style="border-radius: 5px;"> 
+        <table class="table table-striped table-hover mt-2 mx-auto my-auto">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Sobrenome</th>
+                    <th>Nome de Usuário</th>
+                    <th>Data de Nascimento</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+                <tbody> `;
 
                 for (const usuario of listaUsuarios){
                     conteudoResposta += `
@@ -212,9 +246,8 @@ function processarCadastroUsuario(requisicao, resposta){
                             <td>${usuario.nome}</td>
                             <td>${usuario.sobrenome}</td>
                             <td>${usuario.nomeUsuario}</td>
-                            <td>${usuario.cidade}/${usuario.uf}</td>
-                            <td>${usuario.cep}</td>
-                            <td>${usuario.contribuicao}</td>
+                            <td>${usuario.DataNasc}</td>
+                            <td>${usuario.email}</td>
                         <tr>
                     `;
                 }
@@ -222,9 +255,11 @@ function processarCadastroUsuario(requisicao, resposta){
                 conteudoResposta += `
                             </tbody>
                         </table>
+                        </div>
+                        <a class="btn btn-success" href="/cadastroUsuario.html" role"button"> Cadastrar usuários </a>
                         <a class="btn btn-danger" href="/" role"button"> Voltar </a>
-                        <a class="btn btn-success" href="/cadastroUsuario.html" role"button"> Cadastrar mais voluntarios </a>
                     </body>
+                    </div>
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script
                     </html>
                 `;
@@ -232,7 +267,6 @@ function processarCadastroUsuario(requisicao, resposta){
                 }
 }
 
-//pseudo middleware
 function autenticar(requisicao, resposta, next){
     if(requisicao.session.usuarioAutenticado){
         next();
@@ -254,7 +288,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         //tempo de vida da sessão
-        maxAge: 1000 * 60 * 15 //15 minutos
+        maxAge: 1000 * 60 * 30 // 30 minutos
     }
 }));
 
@@ -272,30 +306,76 @@ app.get('/',autenticar, (requisicao, resposta) =>{
     });
 
     resposta.end (`
-    <!DOCTYPE html>
-        <html lang="en">
+        <!DOCTYPE html>
+        <html lang="pt-BR">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Menu do Sistema</title>
+            <title>MENU - Bate-papo WEB</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
             <style>
-                *{font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
-                a {font-size: 20px;
+                body {
+                    background-color: #adaeaf;
+                    background-image: url(background-batepapo.png);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                }
+                .container {
+                    background-color: #585d63fa;
+                    border-radius: 8px;
+                    border: 2px solid black;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    padding: 20px;
+                    max-width: 700px; /* Defina um valor máximo para o tamanho do container */
+                    width: 100%; /* Garante que o container se ajuste à largura disponível */
+                }
+                label { 
+                    font-weight: 800; 
+                }
+                .btn-success {
+                    padding: 10px;
+                    font-size: 16px;
+                }
+                .custom-button {
+                    font-size: 1.5em; /* Utilizando uma unidade relativa (em) para o tamanho do texto */
+                    padding: 3% 32%; /* Utilizando porcentagens para o padding */
                     text-decoration: none;
-                    color: blue;
-                    font-weight: 700;}
+                    border: 2px solid #28a745;
+                    border-radius: 8px;
+                    color: #28a745;
+                    background-color: #ffffff;
+                    display: inline-block; /* Garante que o botão não ocupe toda a largura disponível */
+                    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+                }
+                .custom-button:hover {
+                    background-color: #28a745;
+                    color: #ffffff;
+                    border-color: #ffffff;
+                }
             </style>
         </head>
         <body>
-            <h1>ACESSE AQUI A TELA DE CADASTRO DE VOLUNTARIOS DA ONG AUMIGOS</h1>
-            <ul>
-                <li><a href="/cadastroUsuario.html">Formulario de cadastro de voluntarios</a></li>
-            </ul>
+            <div class="container">
+                <div class="row g-3 needs-validation mx-auto my-auto">
+                    <legend class="mb-3 text-center" style="font-weight: 800;">MENU <br><span style="color: rgba(39, 196, 39, 0.856);">Bate-papo WEB</span> </legend>
+                    <div class="col-md-12">
+                        <p><a href="/cadastroUsuario.html" class="custom-button">Cadastro de Usuários</a></p>
+                    </div>
+                    <div class="col-md-12">
+                        <p><a href="/BatePapo.html" class="custom-button">=== Bate-papo ===</a></p>
+                    </div>
+                    <footer>
+                        <p style="font-size: 16px;">Seu último acesso foi em <strong>${dataUltimoAcesso}</strong></p>
+                    </footer>
+                </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         </body>
-        <footer>
-            <p style="font-size: 16px;">Seu último acesso foi em <strong>${dataUltimoAcesso}</strong></p>
-        </footer>
-    </html>
+        </html>
+
         `);
 });
 //endopoint login que irá processar o login da aplicação
