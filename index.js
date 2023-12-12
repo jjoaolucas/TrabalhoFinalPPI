@@ -11,6 +11,7 @@ const porta = 3000;
 const host =  '0.0.0.0';
 
 var listaUsuarios = [];
+var listaBatePapo = [];
 
 function processarCadastroUsuario(requisicao, resposta){
     const dados = requisicao.body;
@@ -188,12 +189,12 @@ function processarCadastroUsuario(requisicao, resposta){
 
                 .btn-danger {
                     margin-top: 10px;
-                    float: right;
+                    float: left;
                 }
 
                 .btn-success {
                     margin-top: 20px;
-                    float: left;
+                    float: right;
                 }
 
                 th,
@@ -256,8 +257,8 @@ function processarCadastroUsuario(requisicao, resposta){
                             </tbody>
                         </table>
                         </div>
-                        <a class="btn btn-success" href="/cadastroUsuario.html" role"button"> Cadastrar usuários </a>
                         <a class="btn btn-danger" href="/" role"button"> Voltar </a>
+                        <a class="btn btn-success" href="/cadastroUsuario.html" role"button"> Cadastrar usuários </a>
                     </body>
                     </div>
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script
@@ -265,6 +266,216 @@ function processarCadastroUsuario(requisicao, resposta){
                 `;
                 resposta.end(conteudoResposta);
                 }
+}
+
+function processarMensagem(requisicao, resposta){
+    const users = requisicao.body;
+    let conteudoResposta = '';
+
+    if(!(users.mensagem && users.name))
+    {
+        conteudoResposta=`
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Login - Bate-papo WEB</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+            <style>
+                body {
+                    background-color: #adaeaf;
+                    background-image: url(background-batepapo.png);
+                    display: flex;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                }
+        
+                .container {
+                    
+                    background-color: #585d63fa;
+                    border-radius: 8px;
+                    border: 2px solid black;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    padding: 20px;
+                }
+        
+                label { 
+                    font-weight: 800; 
+                    color: black;
+                }
+        
+                .btn-success {
+                    padding: 10px;
+                    font-size: 16px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <form action='/postarMensagem' method="POST" class="row g-3 needs-validation mx-auto my-auto" novalidate>
+                <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nome</label>
+                    <select class="form-select" id="name" name="name" required>
+                        <option selected disabled value="">Escolha um usuario...</option>
+            
+        `;
+        
+        for (const usuario of listaUsuarios) {
+            conteudoResposta += `<option value="${usuario.nome}">${usuario.nome}</option>`;
+        }
+
+        conteudoResposta += `
+                    </select>
+                    ${!users.name ? `<p class="text-danger">Por favor, informe um nome</p>` : ''}
+                </div>
+            </div>
+        `;
+
+        conteudoResposta +=`
+                <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="mensagem" class="form-label">Mensagem:</label>
+                            <input type="text" class="form-control" id="mensagem" name="mensagem" required>
+                            ${!users.mensagem ? `<p class="text-danger">Por favor, informe uma mensagem!</p>` : ''}
+                        </div>
+                </div>
+
+                <div class="col-12 mt-3">
+                            <button class="btn btn-success" type="submit">Enviar</button>
+                </div>
+                    
+                </form>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+            </body>
+            </html>
+        `;
+
+        resposta.end(conteudoResposta)
+    }
+    else {
+        const usuarios = {
+            nome: users.name,
+            mensagem: users.mensagem,
+            dataHora: new Date(), // Adiciona a data e hora atual
+        };
+        listaBatePapo.push(usuarios);
+    
+       
+
+        conteudoResposta = `
+        <!DOCTYPE html>
+        <html lang="en">
+    
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Lista de Voluntários</title>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+            <style>
+                body {
+                    background-color: #adaeaf;
+                    background-image: url(background-batepapo.png);
+                    display: flex;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                }
+    
+                .container {
+                    background-color: #585d63fa;
+                    border-radius: 8px;
+                    border: 2px solid black;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    padding: 20px;
+                }
+    
+                label {
+                    font-weight: 800;
+                    color: rgb(0, 0, 0);
+                }
+    
+                .btn-success,
+                .btn-danger {
+                    padding: 10px;
+                    font-size: 16px;
+                    width: 20%;
+                }
+    
+                .btn-danger {
+                    margin-top: 10px;
+                    float: right;
+                }
+    
+                .btn-success {
+                    margin-top: 20px;
+                    float: left;
+                }
+    
+                th,
+                td {
+                    color: white;
+                }
+    
+                th {
+                    background-color: #28a745;
+                }
+    
+                @media (max-width: 767px) {
+                    .btn-success,
+                    .btn-danger {
+                        width: 100%;
+                        float: none;
+                    }
+                }
+    
+            </style>
+        </head>
+    
+        <body>
+            <div class="container col-md-8" style="padding: 20px;">
+                <h1 class="text-center" style="font-weight: 700;color: black;">Lista de <span style="color: rgba(39, 196, 39, 0.856);">usuários cadastrados</span></h1>
+                <div style="border-radius: 5px;"> 
+                    <table class="table table-striped table-hover mt-2 mx-auto my-auto">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Mensagem</th>
+                                <th>Postado Em:</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    `;
+    
+    for (const usuario of listaBatePapo) {
+        const dataHoraFormatada = usuario.dataHora.toLocaleString(); // Formata a data e hora
+        conteudoResposta += `
+            <tr style="background-color: #585d63fa">
+                <td>${usuario.nome}</td>
+                <td>${usuario.mensagem}</td>
+                <td>${dataHoraFormatada}</td> <!-- Adiciona a coluna de data e hora -->
+            </tr>
+        `;
+    }
+    
+    conteudoResposta += `
+                        </tbody>
+                    </table>
+                </div>
+                <a class="btn btn-success" href="/cadastroUsuario.html" role="button"> Cadastrar usuários </a>
+                <a class="btn btn-danger" href="/" role="button"> Voltar </a>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        </body>
+    
+        </html>
+    `;
+    
+    resposta.end(conteudoResposta);
+    }
 }
 
 function autenticar(requisicao, resposta, next){
@@ -275,6 +486,7 @@ function autenticar(requisicao, resposta, next){
         resposta.redirect("/login.html");
     }
 }
+
 
 const app = express();
 // ativando a funcionalidade de manipular cookies
@@ -365,7 +577,7 @@ app.get('/',autenticar, (requisicao, resposta) =>{
                         <p><a href="/cadastroUsuario.html" class="custom-button">Cadastro de Usuários</a></p>
                     </div>
                     <div class="col-md-12">
-                        <p><a href="/BatePapo.html" class="custom-button">=== Bate-papo ===</a></p>
+                        <p><a href="/postarMensagem.html" class="custom-button">=== Bate-papo ===</a></p>
                     </div>
                     <footer>
                         <p style="font-size: 16px;">Seu último acesso foi em <strong>${dataUltimoAcesso}</strong></p>
@@ -382,6 +594,7 @@ app.get('/',autenticar, (requisicao, resposta) =>{
 app.post('/login' , (requisicao, resposta)=>{
     const usuario = requisicao.body.usuario;
     const senha = requisicao.body.senha;
+
         if(usuario && senha && (usuario === 'joao') && (senha === '123')){
             requisicao.session.usuarioAutenticado = true;
             resposta.redirect('/');
@@ -409,6 +622,8 @@ app.post('/login' , (requisicao, resposta)=>{
 }); 
 
 app.post('/cadastrarUsuario',autenticar, processarCadastroUsuario);
+
+app.post('/postarMensagem', processarMensagem);
 
 app.listen(porta, host, () => {
     console.log(`Servidor executando na url https://${host}:${porta}`)
