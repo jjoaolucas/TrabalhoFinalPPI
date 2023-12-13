@@ -293,7 +293,8 @@ function processarMensagem(requisicao, resposta){
                 }
         
                 .container {
-                    
+                    width: 70%; /* Ajuste a largura conforme necessário */
+                    margin: auto; /* Para centralizar a div na tela */
                     background-color: #585d63fa;
                     border-radius: 8px;
                     border: 2px solid black;
@@ -305,21 +306,35 @@ function processarMensagem(requisicao, resposta){
                     font-weight: 800; 
                     color: black;
                 }
-        
-                .btn-success {
+                
+                .btn-success,
+                .btn-danger {
                     padding: 10px;
                     font-size: 16px;
+                    width: 20%;
                 }
+    
+                .btn-danger {
+                    margin-top: 10px;
+                    float: right;
+                }
+    
+                .btn-success {
+                    margin-top: 20px;
+                    float: left;
+                }
+
             </style>
         </head>
         <body>
             <div class="container">
+                <h1 class="" style="font-weight: 700;color: black;">Enviar <span style="color: rgba(39, 196, 39, 0.856);">Mensagem:</span></h1>
                 <form action='/postarMensagem' method="POST" class="row g-3 needs-validation mx-auto my-auto" novalidate>
                 <div class="col-md-4">
                 <div class="mb-3">
                     <label for="name" class="form-label">Nome</label>
                     <select class="form-select" id="name" name="name" required>
-                        <option selected disabled value="">Escolha um usuario...</option>
+                        <option selected disabled value="Escolha um usuario...">Escolha um usuario...</option>
             
         `;
         
@@ -338,13 +353,14 @@ function processarMensagem(requisicao, resposta){
                 <div class="col-md-4">
                         <div class="mb-3">
                             <label for="mensagem" class="form-label">Mensagem:</label>
-                            <input type="text" class="form-control" id="mensagem" name="mensagem" required>
+                            <input type="text" class="form-control" id="mensagem" name="mensagem" style="width: 100%;" required>
                             ${!users.mensagem ? `<p class="text-danger">Por favor, informe uma mensagem!</p>` : ''}
                         </div>
                 </div>
 
                 <div class="col-12 mt-3">
                             <button class="btn btn-success" type="submit">Enviar</button>
+                            <a class="btn btn-danger" href="/" role="button">Voltar</a>
                 </div>
                     
                 </form>
@@ -407,12 +423,12 @@ function processarMensagem(requisicao, resposta){
     
                 .btn-danger {
                     margin-top: 10px;
-                    float: right;
+                    float: left;
                 }
     
                 .btn-success {
                     margin-top: 20px;
-                    float: left;
+                    float: right;
                 }
     
                 th,
@@ -421,7 +437,7 @@ function processarMensagem(requisicao, resposta){
                 }
     
                 th {
-                    background-color: #28a745;
+                    background-color: #2868a7;
                 }
     
                 @media (max-width: 767px) {
@@ -437,7 +453,7 @@ function processarMensagem(requisicao, resposta){
     
         <body>
             <div class="container col-md-8" style="padding: 20px;">
-                <h1 class="text-center" style="font-weight: 700;color: black;">Lista de <span style="color: rgba(39, 196, 39, 0.856);">usuários cadastrados</span></h1>
+                <h1 class="text-center" style="font-weight: 700;color: black;">Mensagens do <span style="color: #1000e9;">Usuário Postadas</span></h1>
                 <div style="border-radius: 5px;"> 
                     <table class="table table-striped table-hover mt-2 mx-auto my-auto">
                         <thead>
@@ -465,8 +481,8 @@ function processarMensagem(requisicao, resposta){
                         </tbody>
                     </table>
                 </div>
-                <a class="btn btn-success" href="/cadastroUsuario.html" role="button"> Cadastrar usuários </a>
-                <a class="btn btn-danger" href="/" role="button"> Voltar </a>
+                <a class="btn btn-success" style="background-color: #2868a7; border: blue;" href="/postarMensagem.html" role="button">Postar Mensagens</a>
+                <a class="btn btn-danger" href="/login.html" role="button">Logout</a>
             </div>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         </body>
